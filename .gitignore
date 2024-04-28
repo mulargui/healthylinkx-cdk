@@ -5,3 +5,12 @@ node_modules/
 jspm_packages/
 package-lock.json
 
+# cdk generated files
+src/healthylinkx-stack.d.ts
+src/healthylinkx.d.ts
+src/healthylinkx-stack.js
+src/healthylinkx.js
+test/healthylinkx.test.d.ts
+test/healthylinkx.test.js
+cdk.out
+cdk.context.json

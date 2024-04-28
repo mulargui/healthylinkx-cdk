@@ -38,10 +38,11 @@ if [ "debug" == "$1" ]; then
 fi
 
 # run the app
+#docker run -ti --rm -v $HOME/tmp:/healthylinkx \
 docker run -ti --rm -v $REPOPATH:/healthylinkx \
-#docker run -ti --rm -v /home/ulargm/tmp:/healthylinkx \
 	-w /healthylinkx/ \
 	-e AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY -e AWS_ACCOUNT_ID \
 	-e AWS_REGION -e AWS_DEFAULT_REGION -e AWS_SESSION_TOKEN \
 	$debugport \
+	-p 3306:3306 \
 	node-image $commandline

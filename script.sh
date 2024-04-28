@@ -5,4 +5,6 @@ export REPOPATH=$(dirname "$SCRIPT")
 echo $REPOPATH
 echo $SCRIPT
 
-#cdk bootstrap aws://123456789012/$AWS_REGION --profile prod
+#cdk init healthylinkx --language typescript
+#cdk bootstrap 
+#cdk deploy

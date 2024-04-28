@@ -4,7 +4,7 @@
 
 // example test. To run these tests, uncomment this file along with the
 // example resource in lib/healthylinkx-stack.ts
-test('SQS Queue Created', () => {
+test('RDS instance Created', () => {
 //   const app = new cdk.App();
 //     // WHEN
 //   const stack = new Healthylinkx.HealthylinkxStack(app, 'MyTestStack');
