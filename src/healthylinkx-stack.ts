@@ -13,10 +13,10 @@ export class HealthylinkxStack extends cdk.Stack {
       isDefault: true,
     });
 
-    /*// Security group for the RDS instance
-    const securityGroup = new ec2.SecurityGroup(this, "SecurityGroup", {
+    // Security group for the RDS instance
+    const securityGroup = new ec2.SecurityGroup(this, "MySQLSecurityGroup", {
       vpc,
-      description: "MySQL Sec Group'",
+      description: "MySQLSecurityGroup",
       allowAllOutbound: true,
     });
 
@@ -24,8 +24,8 @@ export class HealthylinkxStack extends cdk.Stack {
     securityGroup.addIngressRule(
       ec2.Peer.anyIpv4(),
       ec2.Port.tcp(3306),
-      "Allow MySQL port Access"
-    );*/
+      "Allow-MySQL-port-Access"
+    );
     
     // create database master user secret and store it in Secrets Manager
     const masterUserSecret = new Secret(this, "db-master-user-secret", {
@@ -43,7 +43,7 @@ export class HealthylinkxStack extends cdk.Stack {
     const dbInstance = new rds.DatabaseInstance(this, "healthylinkx-db", {
       vpc: vpc,
       vpcSubnets: { subnetType: ec2.SubnetType.PUBLIC },
-      //securityGroups: [securityGroup],
+      securityGroups: [securityGroup],
       engine: rds.DatabaseInstanceEngine.mysql({version: rds.MysqlEngineVersion.VER_8_0}),
       allocatedStorage: 6,
       instanceType: ec2.InstanceType.of(ec2.InstanceClass.T3, ec2.InstanceSize.MICRO),
