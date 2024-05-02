@@ -3,6 +3,9 @@ import { Construct } from 'constructs';
 import * as rds from 'aws-cdk-lib/aws-rds';
 import * as ec2 from 'aws-cdk-lib/aws-ec2';
 import { Secret } from "aws-cdk-lib/aws-secretsmanager";
+import * as lambda from 'aws-cdk-lib/aws-lambda';
+import * as apigateway from 'aws-cdk-lib/aws-apigateway';
+
 
 export class HealthylinkxStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
@@ -54,8 +57,24 @@ export class HealthylinkxStack extends cdk.Stack {
       removalPolicy: cdk.RemovalPolicy.DESTROY,
     });
 
-    // DB connection settings will be appended to this secret (host, port, etc.)
-    //masterUserSecret.attach(dbInstance);
+    // Define the Lambda function resource
+    const healthylinkxFunction = new lambda.Function(this, 'healthylinkxFunction', {
+      runtime: lambda.Runtime.NODEJS_20_X, // Choose any supported Node.js runtime
+      code: lambda.Code.fromAsset('api/src'), // Points to the lambda directory
+      handler: 'index.handler', // Points to the index file in the lambda directory
+    });
 
+    // give the lambda function access to the DBSecrets
+    masterUserSecret.grantRead(healthylinkxFunction.role!);
+
+    // Define the API Gateway resource
+    const api = new apigateway.LambdaRestApi(this, 'HealthylinkxApi', {
+      handler: healthylinkxFunction,
+      proxy: false,
+    });
+        
+    // Define the '/hello' resource with a GET method
+    const helloResource = api.root.addResource('hello');
+    helloResource.addMethod('GET');
   }
 }
