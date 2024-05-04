@@ -57,24 +57,64 @@ export class HealthylinkxStack extends cdk.Stack {
       removalPolicy: cdk.RemovalPolicy.DESTROY,
     });
 
+    // Add the API Gateway 
+    const api = new apigateway.RestApi(this, 'HealthylinkxApi');
+
+    //====== providers api =====
     // Define the Lambda function resource
-    const healthylinkxFunction = new lambda.Function(this, 'healthylinkxFunction', {
+    const healthylinkxProvidersFunction = new lambda.Function(this, 'healthylinkxProvidersFunction', {
       runtime: lambda.Runtime.NODEJS_20_X, // Choose any supported Node.js runtime
       code: lambda.Code.fromAsset('api/src'), // Points to the lambda directory
-      handler: 'index.handler', // Points to the index file in the lambda directory
+      handler: 'providers.handler', // Points to the index file in the lambda directory
     });
 
     // give the lambda function access to the DBSecrets
-    masterUserSecret.grantRead(healthylinkxFunction.role!);
+    masterUserSecret.grantRead(healthylinkxProvidersFunction.role!);
 
-    // Define the API Gateway resource
-    const api = new apigateway.LambdaRestApi(this, 'HealthylinkxApi', {
-      handler: healthylinkxFunction,
-      proxy: false,
+    // Add to the API Gateway 
+    api.root.addResource('providers').addMethod('GET', new apigateway.LambdaIntegration(healthylinkxProvidersFunction));
+
+    //====== taxonomy api =====
+    // Define the Lambda function resource
+    const healthylinkxTaxonomyFunction = new lambda.Function(this, 'healthylinkxTaxonomyFunction', {
+      runtime: lambda.Runtime.NODEJS_20_X, // Choose any supported Node.js runtime
+      code: lambda.Code.fromAsset('api/src'), // Points to the lambda directory
+      handler: 'taxonomy.handler', // Points to the index file in the lambda directory
     });
-        
-    // Define the '/hello' resource with a GET method
-    const helloResource = api.root.addResource('hello');
-    helloResource.addMethod('GET');
-  }
+
+    // give the lambda function access to the DBSecrets
+    masterUserSecret.grantRead(healthylinkxTaxonomyFunction.role!);
+
+    // Add to the API Gateway
+    api.root.addResource('taxonomy').addMethod('GET', new apigateway.LambdaIntegration(healthylinkxTaxonomyFunction));
+
+    //====== shortlist api =====
+    // Define the Lambda function resource
+    const healthylinkxShortlistFunction = new lambda.Function(this, 'healthylinkxShortlistFunction', {
+      runtime: lambda.Runtime.NODEJS_20_X, // Choose any supported Node.js runtime
+      code: lambda.Code.fromAsset('api/src'), // Points to the lambda directory
+      handler: 'shortlist.handler', // Points to the index file in the lambda directory
+    });
+
+    // give the lambda function access to the DBSecrets
+    masterUserSecret.grantRead(healthylinkxShortlistFunction.role!);
+
+    // Add to the API Gateway
+    api.root.addResource('shortlist').addMethod('GET', new apigateway.LambdaIntegration(healthylinkxShortlistFunction));
+
+    //====== transaction api =====
+    // Define the Lambda function resource
+    const healthylinkxTransactionFunction = new lambda.Function(this, 'healthylinkxTransactionFunction', {
+      runtime: lambda.Runtime.NODEJS_20_X, // Choose any supported Node.js runtime
+      code: lambda.Code.fromAsset('api/src'), // Points to the lambda directory
+      handler: 'transaction.handler', // Points to the index file in the lambda directory
+    });
+
+    // give the lambda function access to the DBSecrets
+    masterUserSecret.grantRead(healthylinkxTransactionFunction.role!);
+
+    // Add to the API Gateway
+    api.root.addResource('transaction').addMethod('GET', new apigateway.LambdaIntegration(healthylinkxTransactionFunction));
+
+  }  
 }

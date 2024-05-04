@@ -1,4 +1,5 @@
 **/.DS_Store
+*.sql
 
 # Dependency directories
 node_modules/
