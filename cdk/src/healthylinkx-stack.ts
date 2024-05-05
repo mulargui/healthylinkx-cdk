@@ -5,7 +5,10 @@ import * as ec2 from 'aws-cdk-lib/aws-ec2';
 import { Secret } from "aws-cdk-lib/aws-secretsmanager";
 import * as lambda from 'aws-cdk-lib/aws-lambda';
 import * as apigateway from 'aws-cdk-lib/aws-apigateway';
-
+import * as s3 from 'aws-cdk-lib/aws-s3';
+import * as s3deploy from 'aws-cdk-lib/aws-s3-deployment'
+import {Distribution, OriginAccessIdentity} from "aws-cdk-lib/aws-cloudfront";
+import {S3Origin} from "aws-cdk-lib/aws-cloudfront-origins";
 
 export class HealthylinkxStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
@@ -116,5 +119,27 @@ export class HealthylinkxStack extends cdk.Stack {
     // Add to the API Gateway
     api.root.addResource('transaction').addMethod('GET', new apigateway.LambdaIntegration(healthylinkxTransactionFunction));
 
+    // create an S3 bucket to host the website
+    const myBucket = new s3.Bucket(this, "healthylinkx-website-bucket", {
+      removalPolicy: cdk.RemovalPolicy.DESTROY,
+      autoDeleteObjects: true,
+      accessControl: s3.BucketAccessControl.PRIVATE,
+      //publicReadAccess: true,     
+      //websiteIndexDocument: "index.html"
+    });
+    const deployment = new s3deploy.BucketDeployment(this, "healthylinkx", {
+      sources: [s3deploy.Source.asset("./ux/src")],
+      destinationBucket: myBucket
+    });
+
+    //Creating the CloudFront distribution that serves the files from the S3 bucket
+    const originAccessIdentity = new OriginAccessIdentity(this, 'OriginAccessIdentity');
+    myBucket.grantRead(originAccessIdentity);
+    new Distribution(this, 'HealthylinkxDistribution', {
+      defaultRootObject: 'index.html',
+      defaultBehavior: {
+        origin: new S3Origin(myBucket, {originAccessIdentity}),
+      },
+    });
   }  
 }
