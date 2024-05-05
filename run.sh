@@ -21,7 +21,7 @@ if [ "$(docker images | grep node-image)" == "" ]; then
 	docker build --rm=true -t node-image $REPOPATH/docker
 fi
 
-# what to do: deploy, interactive (default) or destroy
+# what to do: deploy, interactive (default), bootstrap or destroy
 commandline='/bin/bash'
 
 if [ "deploy" == "$1" ]; then 
@@ -29,6 +29,9 @@ if [ "deploy" == "$1" ]; then
 fi
 if [ "i" == "$1" ]; then 
 	commandline='/bin/bash'
+fi
+if [ "b" == "$1" ]; then 
+	commandline='cdk bootstrap'
 fi
 if [ "destroy" == "$1" ]; then 
 	commandline='cdk destroy'
