@@ -35,6 +35,7 @@ I couldn't automate everything. I could do some hacks but didn't want.
 1) AWS CDK doesn't give you a good mechanism to populate a MySql database (there is one for Postgress). The recommended way is to create a lambda to execute the load, doesn't look great. I ended up running a simple script from the command line (healthylinkx-cli i). The downside of this approach is that I needed to make the database available over the internet (public). 
 ```
 cd /datastore/data
+unzip healthylinkxdump.sql.zip
 mysql -u root -p<password> -h <dbendpoint.rds.amazonaws.com> healthylinkx < healthylinkxdump.sql
 ```
 User, password and rds endpoint can be obtained in the AWS console>>SecretsManager. \
