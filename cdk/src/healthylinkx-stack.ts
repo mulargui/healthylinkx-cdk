@@ -128,7 +128,7 @@ export class HealthylinkxStack extends cdk.Stack {
       //websiteIndexDocument: "index.html"
     });
     const deployment = new s3deploy.BucketDeployment(this, "healthylinkx", {
-      sources: [s3deploy.Source.asset("./ux/src")],
+      sources: [s3deploy.Source.asset("ux/src")],
       destinationBucket: myBucket
     });
 

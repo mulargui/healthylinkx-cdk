@@ -2,7 +2,7 @@
   "name": "healthylinkx",
   "version": "0.1.0",
   "bin": {
-    "healthylinkx": "src/healthylinkx.ts"
+    "healthylinkx": "./healthylinkx.ts"
   },
   "scripts": {
     "build": "tsc",
