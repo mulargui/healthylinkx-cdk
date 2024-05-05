@@ -32,10 +32,11 @@ The ux is a single page web app (html+jquery+bootstrap+javascript) hosted in a S
 
 Notes:
 I couldn't automate everything. I could do some hacks but didn't want.
-1) AWS CDK doesn't give you a good mechanism to populate a MySql database (there is one for Postgress). The recommended way is to create a lambda to execute the load, doesn't look great. I ended up running a simple script from the command line (healthylinkx-cli i). The downside of this approach is that I needed to make my database available over the internet (public). 
+1) AWS CDK doesn't give you a good mechanism to populate a MySql database (there is one for Postgress). The recommended way is to create a lambda to execute the load, doesn't look great. I ended up running a simple script from the command line (healthylinkx-cli i). The downside of this approach is that I needed to make the database available over the internet (public). 
 ```
+cd /datastore/data
 mysql -u root -p<password> -h <dbendpoint.rds.amazonaws.com> healthylinkx < healthylinkxdump.sql
 ```
-User, password and rds endpoint can be obained in the AWS console>>SecretsManager. \
+User, password and rds endpoint can be obtained in the AWS console>>SecretsManager. \
 2) The UX needs the URL of the API endpoints in /ux/src/js/constants.js I could automate it, pending for the future. After completing the deployment, I got the URL from the AWS console>>APIGateway, edited the file and did a new deployment. \
 3) /api/test/test.sh also needs the URL of the endpoints. I also edited by hand before running the tests.
