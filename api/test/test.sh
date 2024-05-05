@@ -15,7 +15,7 @@ test taxonomy
 test transaction "id=1001004" #one results
 test transaction "id=1001009" #two results
 test transaction "id=1001000" #three results
-test transaction "id=1234567" #not found
+test transaction "id=1234567" #doesn't exist
 
 #testing short list
 test shortlist "NPI1=1003002379"
